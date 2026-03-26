@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telephone Directory | BAG Research Institute</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        .top-header {
+            background: #7fb3d3;
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: white;
+            padding: 4px;
+        }
+
+        .institute-name {
+            color: #1a365d;
+            font-weight: 700;
+            font-size: 1.1rem;
+            line-height: 1.3;
+        }
+
+        .institute-name .hindi {
+            font-size: 0.95rem;
+            display: block;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #5a9ab5;
+            padding: 1rem 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            color: white;
+            padding: 0.875rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-item i {
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        .nav-item.active i {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
+            display: none;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .submenu.active {
+            display: block;
+        }
+
+        .submenu-item {
+            color: rgba(255,255,255,0.9);
+            padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submenu-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Welcome Box */
+        .welcome-box {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .welcome-box h2 {
+            color: #1a365d;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .welcome-box p {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Search Box */
+        .search-container {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #5a9ab5;
+        }
+
+        .search-btn {
+            background: white;
+            color: #38a169;
+            border: 1px solid #38a169;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .search-btn:hover {
+            background: #38a169;
+            color: white;
+        }
+
+        /* Directory Table */
+        .directory-table-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .directory-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .directory-table th {
+            background: #5a9ab5;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .directory-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .directory-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .directory-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .email-link {
+            color: #2b6cb0;
+            text-decoration: none;
+        }
+
+        .email-link:hover {
+            text-decoration: underline;
+        }
+
+        .dept-badge {
+            display: inline-block;
+            background: #e6fffa;
+            color: #234e52;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .initiative-badge {
+            display: inline-block;
+            background: #fce7f3;
+            color: #9d174d;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Footer - Matching website style */
+        .footer {
+            background: #7fb3d3;
+            color: #1a365d;
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .footer-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: white;
+            padding: 4px;
+        }
+
+        .brand-text h3 {
+            color: #d69e2e;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .brand-text p {
+            color: #2d3748;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info-box {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid #d69e2e;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: #1a365d;
+            font-size: 0.9rem;
+        }
+
+        .contact-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-row i {
+            color: #d69e2e;
+            width: 16px;
+        }
+
+        .footer-section h4 {
+            color: #d69e2e;
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #d69e2e;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: #1a365d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: #d69e2e;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding: 1.5rem 2rem 0;
+            border-top: 1px solid rgba(26, 54, 93, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #1a365d;
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom a {
+            color: #1a365d;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            color: #d69e2e;
+        }
+
+        .highlight-text {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="logo-container">
+            <img src="chetak123.jpg" alt="SB.Chetak Innovation" class="logo-img" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><rect width=%2250%22 height=%2250%22 fill=%22%23f0f0f0%22/><text x=%2225%22 y=%2230%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2210%22>Logo</text></svg>'">
+            <div class="institute-name">
+                <span class="hindi">एस.बी. चेतक इनोवेशन</span>
+                <span>SB.Chetak Innovation</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-item" onclick="toggleSubmenu('admin')">
+                <span>Administration</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="submenu" id="admin">
+                <div class="submenu-item">Director</div>
+                <div class="submenu-item">CEO</div>
+                <div class="submenu-item">R&D Section</div>
+                <div class="submenu-item">CCC</div>
+            </div>
+
+            <div class="nav-item" onclick="toggleSubmenu('dept')">
+                <span>Departments</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="submenu" id="dept">
+                <div class="submenu-item">SB.Chetak Innovation</div>
+            </div>
+
+            <div class="nav-item" onclick="toggleSubmenu('initiatives')">
+                <span>Initiatives</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="submenu" id="initiatives">
+                <div class="submenu-item">BagRIST Programs</div>
+            </div>
+
+            <div class="nav-item" onclick="toggleSubmenu('sections')">
+                <span>Sections</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="submenu" id="sections">
+                <div class="submenu-item">R&D</div>
+            </div>
+
+            <div class="nav-item" onclick="toggleSubmenu('support')">
+                <span>Support</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="submenu" id="support">
+                <div class="submenu-item">Webmaster</div>
+                <div class="submenu-item">CCC</div>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Welcome Box -->
+            <div class="welcome-box">
+                <h2>Welcome to Telephone Directory, BAG Research Institute</h2>
+                <p>For making a direct phone call to any BAG Intercom Number: Dial 258 XXXX, where XXXX is the extension number</p>
+                <p>For Telephone Complaints : 2915 (Academic & Admin Cplx), 2906 & 2907 (Residential Complex, Guest House), 2909 & 2922(All Hostels & New SAC)</p>
+                <p>Complaint can be booked online at CCC complaint booking. For queries dial 2055, email : phones@bagresearch.co.in</p>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Email-Id or Phone No or Name">
+                    <button class="search-btn" onclick="searchDirectory()">Search</button>
+                </div>
+            </div>
+
+            <!-- Directory Table -->
+            <div class="directory-table-container">
+                <table class="directory-table" id="directoryTable">
+                    <thead>
+                        <tr>
+                            <th>Name/Department</th>
+                            <th>Type</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr data-search="rnd research development section 03612919581">
+                            <td><strong>R&D</strong></td>
+                            <td><span class="section-badge">Section</span></td>
+                            <td><a href="mailto:rnd@bagresearch.co.in" class="email-link">rnd@bagresearch.co.in</a></td>
+                            <td>0361-2919581</td>
+                        </tr>
+                        <tr data-search="director 8811960068">
+                            <td><strong>Director</strong></td>
+                            <td><span class="dept-badge">Administration</span></td>
+                            <td><a href="mailto:director@bagresearch.co.in" class="email-link">director@bagresearch.co.in</a></td>
+                            <td>+91 8811960068</td>
+                        </tr>
+                        <tr data-search="ceo chief executive officer">
+                            <td><strong>CEO</strong></td>
+                            <td><span class="dept-badge">Administration</span></td>
+                            <td><a href="mailto:ceo@bagresearch.co.in" class="email-link">ceo@bagresearch.co.in</a></td>
+                            <td>-</td>
+                        </tr>
+                        <tr data-search="sb chetak innovation department initiative">
+                            <td><strong>SB.Chetak Innovation</strong></td>
+                            <td><span class="initiative-badge">Initiative of BagRIST</span></td>
+                            <td><a href="mailto:sb.chetakinnovation@bagresearch.co.in" class="email-link">sb.chetakinnovation@bagresearch.co.in</a></td>
+                            <td>-</td>
+                        </tr>
+                        <tr data-search="webmaster">
+                            <td><strong>Webmaster</strong></td>
+                            <td><span class="dept-badge">Support</span></td>
+                            <td><a href="mailto:webmaster@bagresearch.co.in" class="email-link">webmaster@bagresearch.co.in</a></td>
+                            <td>-</td>
+                        </tr>
+                        <tr data-search="ccc computer communication centre">
+                            <td><strong>CCC</strong></td>
+                            <td><span class="dept-badge">Computer & Communication Centre</span></td>
+                            <td><a href="mailto:ccc@bagresearch.co.in" class="email-link">ccc@bagresearch.co.in</a></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="no-results hidden" id="noResults">
+                    <i class="fas fa-search" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 1rem;"></i>
+                    <p>No results found</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <img src="chetak123.jpg" alt="SB.Chetak Innovation" class="footer-logo" onerror="this.style.display='none'">
+                <div class="brand-text">
+                    <h3>BRIST</h3>
+                    <p>Advancing Research. Building the Future.</p>
+                    <div class="contact-info-box">
+                        <div class="contact-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Guwahati, Assam, India</span>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-phone"></i>
+                            <span>+91 8811960068</span>
+                        </div>
+                        <div class="contact-row">
+                            <i class="fas fa-envelope"></i>
+                            <span>saswata@bagresearch.co.in</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Projects</h4>
+                <ul>
+                    <li><a href="#">CHETAK Coal Mine System</a></li>
+                    <li><a href="#">Smart Safety Helmet</a></li>
+                    <li><a href="#">EMG Wheelchair (Charaibeti)</a></li>
+                    <li><a href="#">Smart IoT Bin</a></li>
+                    <li><a href="#">Auto Attendance System</a></li>
+                    <li><a href="#">Tetris on Arduino</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Utilities</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-book"></i> E-Library Access</a></li>
+                    <li><a href="#"><i class="fas fa-graduation-cap"></i> Training Courses</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Research Queries</a></li>
+                    <li><a href="#"><i class="fas fa-university"></i> Council Portal</a></li>
+                    <li><a href="#">General Complains</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Administration</h4>
+                <ul>
+                    <li><a href="#">R&D Section</a></li>
+                    <li><a href="#">Intranet</a></li>
+                    <li><a href="#">Team Automation</a></li>
+                    <li><a href="#">Internal Complaints</a></li>
+                    <li><a href="#">Contact Directory</a></li>
+                    <li><a href="#">General Inquiries</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 <span class="highlight-text">Bag Research Innovation of Science & Technology</span>. All rights reserved.</p>
+            <a href="#">Legal Disclaimer</a>
+        </div>
+    </footer>
+
+    <script>
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const navItem = submenu.previousElementSibling;
+            
+            submenu.classList.toggle('active');
+            navItem.classList.toggle('active');
+        }
+
+        function searchDirectory() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#tableBody tr');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const searchData = row.getAttribute('data-search').toLowerCase();
+                const text = row.textContent.toLowerCase();
+                
+                if (searchData.includes(searchTerm) || text.includes(searchTerm) || searchTerm === '') {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Real-time search
+        document.getElementById('searchInput').addEventListener('input', searchDirectory);
+
+        // Enter key search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchDirectory();
+            }
+        });
+    </script>
+</body>
+</html>
