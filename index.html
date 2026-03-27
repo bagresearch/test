@@ -1,698 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telephone Directory | BAG Research Institute</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>Research - BRIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* CSS Variables - Light Blue Theme */
+    :root {
+      --bg: #f0f8ff;
+      --ink: #1a1a2e;
+      --brand: #3498db;
+      --accent: #e3f2fd;
+      --card: #ffffff;
+      --muted: #5a6a7a;
+      --footer-bg: #e3f2fd;
+      --footer-text: #2c3e50;
+      --link-hover: #2980b9;
+    }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    /* Reset box sizing */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-        /* Top Header */
-        .top-header {
-            background: #7fb3d3;
-            padding: 0.75rem 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+    /* Body styling with top padding for the fixed header */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+      padding-top: 70px;
+      color: var(--ink);
+    }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+    /* Fixed top banner with side images and scrolling text */
+    .top-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 1000;
+    }
 
-        .logo-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: white;
-            padding: 4px;
-        }
+    .top-banner img.top-left,
+    .top-banner img.top-right {
+      position: absolute;
+      top: 10px;
+      height: 40px;
+      object-fit: contain;
+    }
 
-        .institute-name {
-            color: #1a365d;
-            font-weight: 700;
-            font-size: 1.1rem;
-            line-height: 1.3;
-        }
+    .top-banner img.top-left {
+      left: 10px;
+    }
 
-        .institute-name .hindi {
-            font-size: 0.95rem;
-            display: block;
-        }
+    .top-banner img.top-right {
+      right: 10px;
+    }
 
-        /* Main Layout */
-        .main-container {
-            display: flex;
-            flex: 1;
-            min-height: calc(100vh - 140px);
-        }
+    .scrolling-text {
+      white-space: nowrap;
+      font-weight: bold;
+      font-size: 14pt;
+      color: var(--brand);
+      text-transform: uppercase;
+      animation: scroll-left 15s linear infinite;
+      padding-left: 100%;
+    }
 
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: #5a9ab5;
-            padding: 1rem 0;
-            flex-shrink: 0;
-        }
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
 
-        .nav-item {
-            color: white;
-            padding: 0.875rem 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-            font-size: 0.95rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+    /* Main container styling */
+    .container {
+      max-width: 1000px;
+      background: var(--card);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(52, 152, 219, 0.15);
+      text-align: center;
+      margin: 20px auto;
+      flex: 1;
+    }
 
-        .nav-item:hover {
-            background: rgba(255,255,255,0.1);
-        }
+    h1, h2 {
+      color: var(--brand);
+      text-align: center;
+      border-bottom: 2px solid var(--brand);
+      padding-bottom: 10px;
+    }
 
-        .nav-item i {
-            font-size: 0.75rem;
-            transition: transform 0.2s;
-        }
+    p, ul {
+      text-align: justify;
+      line-height: 1.8;
+    }
 
-        .nav-item.active i {
-            transform: rotate(180deg);
-        }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
 
-        .submenu {
-            display: none;
-            background: rgba(0,0,0,0.1);
-        }
+    li {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: var(--accent);
+      border-radius: 8px;
+      border-left: 4px solid var(--brand);
+    }
 
-        .submenu.active {
-            display: block;
-        }
+    strong {
+      color: var(--brand);
+      font-size: 1.1em;
+    }
 
-        .submenu-item {
-            color: rgba(255,255,255,0.9);
-            padding: 0.75rem 1.5rem 0.75rem 2.5rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+    a {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: var(--brand);
+      transition: color 0.3s;
+    }
 
-        .submenu-item:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
+    a:hover {
+      color: var(--link-hover);
+      text-decoration: underline;
+    }
 
-        /* Content Area */
-        .content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
+    /* Footer Styles - Light Blue Theme */
+    footer {
+      background-color: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 40px 20px 20px;
+      margin-top: auto;
+      border-top: 3px solid var(--brand);
+    }
 
-        /* Welcome Box */
-        .welcome-box {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        .welcome-box h2 {
-            color: #1a365d;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
 
-        .welcome-box p {
-            color: #4a5568;
-            line-height: 1.8;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
+    .footer-column h4 {
+      color: var(--brand);
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--brand);
+      padding-bottom: 8px;
+    }
 
-        /* Search Box */
-        .search-container {
-            background: #f7fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-        .search-wrapper {
-            display: flex;
-            gap: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    .footer-column ul li {
+      margin-bottom: 10px;
+      background: transparent;
+      border-left: none;
+      padding: 0;
+    }
 
-        .search-input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid #cbd5e0;
-            border-radius: 4px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+    .footer-column ul li a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
 
-        .search-input:focus {
-            border-color: #5a9ab5;
-        }
+    .footer-column ul li a:hover {
+      color: var(--brand);
+    }
 
-        .search-btn {
-            background: white;
-            color: #38a169;
-            border: 1px solid #38a169;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
+    .footer-brand-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
 
-        .search-btn:hover {
-            background: #38a169;
-            color: white;
-        }
+    .footer-brand-header img {
+      height: 50px;
+      width: auto;
+      border-radius: 8px;
+    }
 
-        /* Directory Table */
-        .directory-table-container {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+    .footer-brand-header h3 {
+      margin: 0;
+      color: var(--brand);
+      font-size: 1.5em;
+    }
 
-        .directory-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .footer-brand-header p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.9em;
+      text-align: left;
+    }
 
-        .directory-table th {
-            background: #5a9ab5;
-            color: white;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+    .footer-contact p {
+      margin: 8px 0;
+      color: var(--muted);
+      text-align: left;
+    }
 
-        .directory-table td {
-            padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            color: #2d3748;
-            font-size: 0.95rem;
-        }
+    .footer-bottom {
+      border-top: 1px solid var(--brand);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-        .directory-table tr:hover {
-            background: #f7fafc;
-        }
+    .footer-bottom p {
+      margin: 0;
+      color: var(--muted);
+    }
 
-        .directory-table tr:last-child td {
-            border-bottom: none;
-        }
+    .footer-bottom a {
+      color: var(--brand);
+      text-decoration: none;
+    }
 
-        .email-link {
-            color: #2b6cb0;
-            text-decoration: none;
-        }
+    /* Back to Home Button */
+    .back-button {
+      margin-top: 30px;
+    }
 
-        .email-link:hover {
-            text-decoration: underline;
-        }
+    .back-button a {
+      display: inline-block;
+      padding: 12px 30px;
+      background: var(--brand);
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
 
-        .dept-badge {
-            display: inline-block;
-            background: #e6fffa;
-            color: #234e52;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
+    .back-button a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+      text-decoration: none;
+    }
 
-        .section-badge {
-            display: inline-block;
-            background: #fef3c7;
-            color: #92400e;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .initiative-badge {
-            display: inline-block;
-            background: #fce7f3;
-            color: #9d174d;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        /* Footer - Matching website style */
-        .footer {
-            background: #7fb3d3;
-            color: #1a365d;
-            padding: 3rem 0 1.5rem;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .footer-brand {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-        }
-
-        .footer-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: white;
-            padding: 4px;
-        }
-
-        .brand-text h3 {
-            color: #d69e2e;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .brand-text p {
-            color: #2d3748;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .contact-info-box {
-            background: rgba(255,255,255,0.2);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 3px solid #d69e2e;
-        }
-
-        .contact-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            color: #1a365d;
-            font-size: 0.9rem;
-        }
-
-        .contact-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .contact-row i {
-            color: #d69e2e;
-            width: 16px;
-        }
-
-        .footer-section h4 {
-            color: #d69e2e;
-            font-size: 1.1rem;
-            margin-bottom: 1.25rem;
-            font-weight: 600;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .footer-section h4::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background: #d69e2e;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-section a {
-            color: #1a365d;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.2s;
-        }
-
-        .footer-section a:hover {
-            color: #d69e2e;
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 2rem auto 0;
-            padding: 1.5rem 2rem 0;
-            border-top: 1px solid rgba(26, 54, 93, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #1a365d;
-            font-size: 0.85rem;
-        }
-
-        .footer-bottom a {
-            color: #1a365d;
-            text-decoration: none;
-        }
-
-        .footer-bottom a:hover {
-            color: #d69e2e;
-        }
-
-        .highlight-text {
-            color: #d69e2e;
-            font-weight: 600;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .footer-container {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-            }
-            
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-bottom {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 3rem;
-            color: #718096;
-        }
-    </style>
+    /* Responsive */
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Top Header -->
-    <header class="top-header">
-        <div class="logo-container">
-            <img src="chetak123.jpg" alt="SB.Chetak Innovation" class="logo-img" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><rect width=%2250%22 height=%2250%22 fill=%22%23f0f0f0%22/><text x=%2225%22 y=%2230%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2210%22>Logo</text></svg>'">
-            <div class="institute-name">
-                <span class="hindi">एस.बी. चेतक इनोवेशन</span>
-                <span>SB.Chetak Innovation</span>
-            </div>
-        </div>
-    </header>
+  <!-- Fixed Top Banner -->
+  <div class="top-banner">
+    <img src="chetak123.jpg" alt="Chetak 123" class="top-left">
+    <img src="chetak222.jpg" alt="Chetak 222" class="top-right">
+    <div class="scrolling-text">Welcome to Research Page of Saswata Bag</div>
+  </div>
 
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="nav-item" onclick="toggleSubmenu('admin')">
-                <span>Administration</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="submenu" id="admin">
-                <div class="submenu-item">Director</div>
-                <div class="submenu-item">CEO</div>
-                <div class="submenu-item">R&D Section</div>
-                <div class="submenu-item">CCC</div>
-            </div>
+  <!-- Main Content Container -->
+  <div class="container">
+    <h1>Research Overview</h1>
+    <p><strong>My research focuses on IoT systems, industrial safety, real-time monitoring, and smart solutions for improving human lives.</strong></p>
 
-            <div class="nav-item" onclick="toggleSubmenu('dept')">
-                <span>Departments</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="submenu" id="dept">
-                <div class="submenu-item">SB.Chetak Innovation</div>
-            </div>
+    <!-- Research Areas Section -->
+    <h2>Research Areas</h2>
+    <ul>
+      <li>
+        <strong>Internet of Things (IoT) in Industrial Safety</strong><br>
+        Developing smart systems to monitor and enhance safety protocols in industrial environments.
+      </li>
+      <li>
+        <strong>Real-Time Environmental Monitoring</strong><br>
+        Implementing sensor networks for continuous assessment of environmental parameters.
+      </li>
+      <li>
+        <strong>Assistive Technologies</strong><br>
+        Designing devices to aid individuals with mobility challenges.
+      </li>
+    </ul>
 
-            <div class="nav-item" onclick="toggleSubmenu('initiatives')">
-                <span>Initiatives</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="submenu" id="initiatives">
-                <div class="submenu-item">BagRIST Programs</div>
-            </div>
+    <!-- Ongoing Projects Section -->
+    <h2>Ongoing Projects</h2>
+    <ul>
+      <li>
+        <strong>Chetak</strong><br>
+        Utilizing artificial intelligence to forecast equipment failures and enhance safety in mining operations.
+      </li>
+      <li>
+        <strong>Enhanced Smart Safety Helmet with Multi-Sensor Fusion</strong><br>
+        Integrating various sensors to develop advanced safety helmets for industrial workers.
+      </li>
+      <li>
+        <strong>EMG-Controlled Wheelchair</strong><br>
+        Developing assistive mobility solutions using electromyography signals.
+      </li>
+    </ul>
 
-            <div class="nav-item" onclick="toggleSubmenu('sections')">
-                <span>Sections</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="submenu" id="sections">
-                <div class="submenu-item">R&D</div>
-            </div>
+    <!-- Research Collaborations Section -->
+    <h2>Research Collaborations</h2>
+    <ul>
+      <li>
+        <strong>Indian Institute of Technology Guwahati (IITG)</strong><br>
+        Collaborating on projects related to industrial safety and IoT applications.
+      </li>
+      <li>
+        <strong>National Innovation Foundation (NIF)</strong><br>
+        Research on making EMG Controlled Wheel Chair.
+      </li>
+    </ul>
 
-            <div class="nav-item" onclick="toggleSubmenu('support')">
-                <span>Support</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="submenu" id="support">
-                <div class="submenu-item">Webmaster</div>
-                <div class="submenu-item">CCC</div>
-            </div>
-        </nav>
+    <!-- Research Funding Section -->
+    <h2>Research Funding</h2>
+    <ul>
+      <li>
+        <strong>Department Of Science Of Technology (DST)</strong><br>
+        Funding on project "Smart Safety Helmet".
+      </li>
+      <li>
+        <strong>National Innovation Foundation</strong><br>
+        Funding on project "EMG-Wheelchair (Charaibeti)".
+      </li>
+    </ul>
 
-        <!-- Content Area -->
-        <main class="content">
-            <!-- Welcome Box -->
-            <div class="welcome-box">
-                <h2>Welcome to Telephone Directory, BAG Research Institute</h2>
-                <p>For making a direct phone call to any BAG Intercom Number: Dial 258 XXXX, where XXXX is the extension number</p>
-                <p>For Telephone Complaints : 2915 (Academic & Admin Cplx), 2906 & 2907 (Residential Complex, Guest House), 2909 & 2922(All Hostels & New SAC)</p>
-                <p>Complaint can be booked online at CCC complaint booking. For queries dial 2055, email : phones@bagresearch.co.in</p>
-            </div>
+    <!-- Research Team Section -->
+    <h2>Research Team</h2>
+    <ul>
+      <li>
+        <strong>Saswata Bag</strong><br>
+        Focus: IoT systems, industrial safety, real-time monitoring, and smart solutions for improving human lives.
+      </li>
+    </ul>
 
-            <!-- Search Box -->
-            <div class="search-container">
-                <div class="search-wrapper">
-                    <input type="text" class="search-input" id="searchInput" placeholder="Email-Id or Phone No or Name">
-                    <button class="search-btn" onclick="searchDirectory()">Search</button>
-                </div>
-            </div>
-
-            <!-- Directory Table -->
-            <div class="directory-table-container">
-                <table class="directory-table" id="directoryTable">
-                    <thead>
-                        <tr>
-                            <th>Name/Department</th>
-                            <th>Type</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr data-search="rnd research development section 03612919581">
-                            <td><strong>R&D</strong></td>
-                            <td><span class="section-badge">Section</span></td>
-                            <td><a href="mailto:rnd@bagresearch.co.in" class="email-link">rnd@bagresearch.co.in</a></td>
-                            <td>0361-2919581</td>
-                        </tr>
-                        <tr data-search="director 8811960068">
-                            <td><strong>Director</strong></td>
-                            <td><span class="dept-badge">Administration</span></td>
-                            <td><a href="mailto:director@bagresearch.co.in" class="email-link">director@bagresearch.co.in</a></td>
-                            <td>+91 8811960068</td>
-                        </tr>
-                        <tr data-search="ceo chief executive officer">
-                            <td><strong>CEO</strong></td>
-                            <td><span class="dept-badge">Administration</span></td>
-                            <td><a href="mailto:ceo@bagresearch.co.in" class="email-link">ceo@bagresearch.co.in</a></td>
-                            <td>-</td>
-                        </tr>
-                        <tr data-search="sb chetak innovation department initiative">
-                            <td><strong>SB.Chetak Innovation</strong></td>
-                            <td><span class="initiative-badge">Initiative of BagRIST</span></td>
-                            <td><a href="mailto:sb.chetakinnovation@bagresearch.co.in" class="email-link">sb.chetakinnovation@bagresearch.co.in</a></td>
-                            <td>-</td>
-                        </tr>
-                        <tr data-search="webmaster">
-                            <td><strong>Webmaster</strong></td>
-                            <td><span class="dept-badge">Support</span></td>
-                            <td><a href="mailto:webmaster@bagresearch.co.in" class="email-link">webmaster@bagresearch.co.in</a></td>
-                            <td>-</td>
-                        </tr>
-                        <tr data-search="ccc computer communication centre">
-                            <td><strong>CCC</strong></td>
-                            <td><span class="dept-badge">Computer & Communication Centre</span></td>
-                            <td><a href="mailto:ccc@bagresearch.co.in" class="email-link">ccc@bagresearch.co.in</a></td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="no-results hidden" id="noResults">
-                    <i class="fas fa-search" style="font-size: 2rem; color: #cbd5e0; margin-bottom: 1rem;"></i>
-                    <p>No results found</p>
-                </div>
-            </div>
-        </main>
+    <!-- Back to Home Button -->
+    <div class="back-button">
+      <a href="index.html">Back to Home</a>
     </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <img src="chetak123.jpg" alt="SB.Chetak Innovation" class="footer-logo" onerror="this.style.display='none'">
-                <div class="brand-text">
-                    <h3>BRIST</h3>
-                    <p>Advancing Research. Building the Future.</p>
-                    <div class="contact-info-box">
-                        <div class="contact-row">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Guwahati, Assam, India</span>
-                        </div>
-                        <div class="contact-row">
-                            <i class="fas fa-phone"></i>
-                            <span>+91 8811960068</span>
-                        </div>
-                        <div class="contact-row">
-                            <i class="fas fa-envelope"></i>
-                            <span>saswata@bagresearch.co.in</span>
-                        </div>
-                    </div>
-                </div>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- Brand Column -->
+        <div class="footer-column footer-brand">
+          <div class="footer-brand-header">
+            <img src="chetak123.jpg" alt="BRIST Logo" loading="lazy">
+            <div>
+              <h3>BRIST</h3>
+              <p>Advancing Research. Building the Future.</p>
             </div>
-
-            <div class="footer-section">
-                <h4>Projects</h4>
-                <ul>
-                    <li><a href="#">CHETAK Coal Mine System</a></li>
-                    <li><a href="#">Smart Safety Helmet</a></li>
-                    <li><a href="#">EMG Wheelchair (Charaibeti)</a></li>
-                    <li><a href="#">Smart IoT Bin</a></li>
-                    <li><a href="#">Auto Attendance System</a></li>
-                    <li><a href="#">Tetris on Arduino</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h4>Utilities</h4>
-                <ul>
-                    <li><a href="#"><i class="fas fa-book"></i> E-Library Access</a></li>
-                    <li><a href="#"><i class="fas fa-graduation-cap"></i> Training Courses</a></li>
-                    <li><a href="#"><i class="fas fa-question-circle"></i> Research Queries</a></li>
-                    <li><a href="#"><i class="fas fa-university"></i> Council Portal</a></li>
-                    <li><a href="#">General Complains</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h4>Administration</h4>
-                <ul>
-                    <li><a href="#">R&D Section</a></li>
-                    <li><a href="#">Intranet</a></li>
-                    <li><a href="#">Team Automation</a></li>
-                    <li><a href="#">Internal Complaints</a></li>
-                    <li><a href="#">Contact Directory</a></li>
-                    <li><a href="#">General Inquiries</a></li>
-                </ul>
-            </div>
+          </div>
+          <div class="footer-contact">
+            <p>📍 Guwahati, Assam, India</p>
+            <p>📞 +91 8811960068</p>
+            <p>📧 saswata@bagresearch.co.in</p>
+          </div>
         </div>
 
-        <div class="footer-bottom">
-            <p>© 2026 <span class="highlight-text">Bag Research Innovation of Science & Technology</span>. All rights reserved.</p>
-            <a href="#">Legal Disclaimer</a>
+        <!-- Projects Column -->
+        <div class="footer-column">
+          <h4>Projects</h4>
+          <ul>
+            <li><a href="chetak.php">CHETAK Coal Mine System</a></li>
+            <li><a href="smart-helmet.php">Smart Safety Helmet</a></li>
+            <li><a href="emg-wheelchair.php">EMG Wheelchair (Charaibeti)</a></li>
+            <li><a href="smart-bin.php">Smart IoT Bin</a></li>
+            <li><a href="smart-auto-attendance.php">Auto Attendance System</a></li>
+            <li><a href="tetries.php">Tetris on Arduino</a></li>
+          </ul>
         </div>
-    </footer>
 
-    <script>
-        function toggleSubmenu(id) {
-            const submenu = document.getElementById(id);
-            const navItem = submenu.previousElementSibling;
-            
-            submenu.classList.toggle('active');
-            navItem.classList.toggle('active');
+        <!-- Utilities Column -->
+        <div class="footer-column">
+          <h4>Utilities</h4>
+          <ul>
+            <li><a href="elibrary.php">📚 E-Library Access</a></li>
+            <li><a href="courses.php">🎓 Training Courses</a></li>
+            <li><a href="queries.php">❓ Research Queries</a></li>
+            <li><a href="council.php">🏛️ Council Portal</a></li>
+            <li><a href="generalcomplain.php">General Complains</a></li>
+          </ul>
+        </div>
+
+        <!-- Administration Column -->
+        <div class="footer-column">
+          <h4>Administration</h4>
+          <ul>
+            <li><a href="rnd.php">R&D Section</a></li>
+            <li><a href="https://intranet.bagresearch.co.in">Intranet</a></li>
+            <li><a href="teamautomation.php">Team Automation</a></li>
+            <li><a href="https://intranet.bagresearch.co.in/complaint">Internal Complaints</a></li>
+            <li><a href="telephonedirectory.php">Contact Directory</a></li>
+            <li><a href="contact.php">General Inquiries</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <p>© <?php echo date('Y'); ?> <span style="color: var(--brand);">Bag Research Innovation of Science & Technology</span>. All rights reserved.</p>
+        <a href="legaldisclaimer.php">Legal Disclaimer</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+      });
+    });
 
-        function searchDirectory() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            const rows = document.querySelectorAll('#tableBody tr');
-            let visibleCount = 0;
+    // Touch feedback for mobile
+    document.querySelectorAll('a, button, .research-card, .program-card').forEach(el => {
+      el.addEventListener('touchstart', () => el.style.opacity = '0.8', {passive: true});
+      el.addEventListener('touchend', () => el.style.opacity = '1', {passive: true});
+    });
 
-            rows.forEach(row => {
-                const searchData = row.getAttribute('data-search').toLowerCase();
-                const text = row.textContent.toLowerCase();
-                
-                if (searchData.includes(searchTerm) || text.includes(searchTerm) || searchTerm === '') {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+    // Auto "Last Updated" Date
+    const now = new Date();
+    const formatted = now.toLocaleDateString("en-IN", {
+      day: "numeric", month: "long", year: "numeric"
+    });
+    console.log("Page loaded. Last updated: " + formatted);
+  </script>
 
-            const noResults = document.getElementById('noResults');
-            if (visibleCount === 0) {
-                noResults.classList.remove('hidden');
-            } else {
-                noResults.classList.add('hidden');
-            }
-        }
-
-        // Real-time search
-        document.getElementById('searchInput').addEventListener('input', searchDirectory);
-
-        // Enter key search
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchDirectory();
-            }
-        });
-    </script>
 </body>
 </html>
